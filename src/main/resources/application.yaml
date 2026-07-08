@@ -1,3 +1,5 @@
 spring:
-  application:
+  profiles:
     name: pos-system
+    active: dev
+

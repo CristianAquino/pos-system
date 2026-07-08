@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://postgresql-blogsproyect.alwaysdata.net:5432/blogsproyect_pos_system?sslmode=require
+    username: blogsproyect
+    password: 123blogsProyect+++
+    driver-class-name: org.postgresql.Driver
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
