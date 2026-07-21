@@ -1,3 +1,4 @@
+DROP FUNCTION IF EXISTS fn_call_generate_code();
 CREATE OR REPLACE FUNCTION fn_call_generate_code()
 RETURNS TRIGGER AS $$
 BEGIN

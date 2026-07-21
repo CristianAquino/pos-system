@@ -3,7 +3,8 @@ CREATE TABLE pos_system_roles (
     code VARCHAR(6) NOT NULL UNIQUE,
     description VARCHAR(10) NOT NULL UNIQUE,
     status CHAR(1) NOT NULL DEFAULT 'A' CHECK(status IN ('A','I')),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT NULL
 );
 
 COMMENT ON TABLE pos_system_roles IS
@@ -23,3 +24,6 @@ COMMENT ON COLUMN pos_system_roles.status IS
 
 COMMENT ON COLUMN pos_system_roles.created_at IS
 'Fecha de creacion de rol';
+
+COMMENT ON COLUMN pos_system_roles.updated_at IS
+'Fecha de actualizacion del estado del rol';

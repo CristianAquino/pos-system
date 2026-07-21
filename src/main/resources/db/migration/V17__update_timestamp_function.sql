@@ -1,3 +1,4 @@
+DROP FUNCTION IF EXISTS fn_update_timestamp();
 CREATE OR REPLACE FUNCTION fn_update_timestamp()
 RETURNS TRIGGER
 AS $$

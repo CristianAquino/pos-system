@@ -1,3 +1,4 @@
+DROP FUNCTION IF EXISTS fn_random_code();
 CREATE OR REPLACE FUNCTION fn_random_code()
 RETURNS text
 AS
