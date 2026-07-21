@@ -3,3 +3,6 @@ spring:
     name: pos-system
     active: dev
 
+  jpa:
+    hibernate:
+      ddl-auto: validate
