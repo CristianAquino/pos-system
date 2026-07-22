@@ -1,7 +1,7 @@
 CREATE TABLE pos_system_cash_registers (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     name VARCHAR(10) NOT NULL UNIQUE,
-    status CHAR(1) NOT NULL DEFAULT 'A' CHECK(status IN ('A','I')),
+    status CHAR(1) NOT NULL DEFAULT 'I' CHECK(status IN ('A','I')),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT NULL
 );
