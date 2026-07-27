@@ -3,6 +3,7 @@ CREATE TABLE pos_system_sales (
     user_id UUID NOT NULL,
     cash_opening_id UUID NOT NULL,
     payment_method_id INTEGER NOT NULL,
+    sale_code VARCHAR(200) DEFAULT NULL,
     subtotal NUMERIC(10,2) NOT NULL DEFAULT 0 CHECK(subtotal>=0),
     tax INTEGER NOT NULL DEFAULT 0 CHECK(tax>=0),
     discount INTEGER NOT NULL DEFAULT 0 CHECK(discount>=0),
@@ -26,6 +27,9 @@ COMMENT ON COLUMN pos_system_sales.cash_opening_id IS
 
 COMMENT ON COLUMN pos_system_sales.payment_method_id IS
 'Relacion con el metodo de pago de la venta';
+
+COMMENT ON COLUMN pos_system_sales.sale_code IS
+'Codigo de venta, debe empezar con S<numeros_secuenciales>';
 
 COMMENT ON COLUMN pos_system_sales.subtotal IS
 'Subtotal de la venta realizada';
