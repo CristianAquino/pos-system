@@ -63,3 +63,8 @@ ALTER TABLE pos_system_inventory_movements
 ADD CONSTRAINT fk_inventory_movement_user
 FOREIGN KEY (user_id)
 REFERENCES pos_system_users(id);
+
+ALTER TABLE pos_system_inventory_movements
+ADD CONSTRAINT fk_inventory_movement_sale
+FOREIGN KEY (sale_id)
+REFERENCES pos_system_sales(id);
