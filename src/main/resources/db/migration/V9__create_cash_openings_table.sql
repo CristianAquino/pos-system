@@ -11,7 +11,7 @@ CREATE TABLE pos_system_cash_openings (
     expect_cash_amount NUMERIC(10,2) DEFAULT NULL CHECK(expect_cash_amount>=0),
     opened_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     closed_at TIMESTAMP DEFAULT NULL,
-    status CHAR(1) NOT NULL DEFAULT 'A' CHECK(status IN ('A','I')),
+    status VARCHAR(1) NOT NULL DEFAULT 'A' CHECK(status IN ('A','I')),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT NULL
 );
