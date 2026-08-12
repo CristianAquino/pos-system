@@ -1,6 +1,6 @@
 DO $$
 DECLARE
-    v_max_prod INTEGER :=4;
+    v_max_prod INTEGER :=20;
     v_min INTEGER :=1;
     v_random_products INTEGER;
     v_products JSONB;
@@ -12,7 +12,7 @@ DECLARE
     v_total NUMERIC(10,2);
 BEGIN
     -- iniciando ventas
-    FOR _ IN 1..5
+    FOR _ IN 1..10
     LOOP
     -- eligiendo productos
         v_random_products := fn_gen_random(v_min,v_max_prod);
@@ -48,7 +48,7 @@ BEGIN
         SELECT id
         INTO v_payment_method
         FROM pos_system_payment_methods
-        WHERE status = 'A'
+        WHERE status = 'A' AND soft_delete IS NULL
         ORDER BY RANDOM()
         LIMIT 1;
 
@@ -71,7 +71,7 @@ BEGIN
         LOOP
             v_total:= v_total + (v_item->>'quantity')::numeric*(v_item->>'unit')::numeric;
             -- detalle de la venta
-            INSERT INTO pos_system_sale_details(sale_id, product_id, quantity, unit_price, subtotal)
+            INSERT INTO pos_system_sale_details(sale_id, product_id, quantity, unit_price, amount)
             VALUES(v_sale_id,(v_item->>'id')::numeric,(v_item->>'quantity')::numeric,(v_item->>'unit')::numeric,
             (v_item->>'quantity')::numeric*(v_item->>'unit')::numeric);
 
@@ -85,7 +85,7 @@ BEGIN
 
         -- actualizamos la venta
         UPDATE pos_system_sales s
-        SET total = v_total, subtotal = FLOOR(v_total*(100-s.tax)/100)
+        SET total = v_total, subtotal = v_total*(100-s.ptax)/100, tax = v_total*s.ptax/100
         WHERE id = v_sale_id;
 
         -- moviento de la venta
