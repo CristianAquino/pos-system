@@ -6,6 +6,7 @@ BEGIN
     FOR v_user IN
         SELECT *
         FROM pos_system_users
+        WHERE soft_delete IS NULL
         ORDER BY RANDOM()
     LOOP
         v_contador:=v_contador+1;
