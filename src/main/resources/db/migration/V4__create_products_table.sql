@@ -5,9 +5,11 @@ CREATE TABLE pos_system_products (
     sale_price NUMERIC(7,2) NOT NULL DEFAULT 1 CHECK(sale_price>0),
     stock INTEGER NOT NULL DEFAULT 0 CHECK(stock>=0),
     minimum_stock INTEGER NOT NULL DEFAULT 1 CHECK(minimum_stock>0),
+    slug TEXT DEFAULT NULL UNIQUE,
+    search_name TEXT DEFAULT NULL UNIQUE,
     sku VARCHAR(12) NOT NULL UNIQUE,
     upc TEXT NOT NULL UNIQUE,
-    status CHAR(1) NOT NULL DEFAULT 'A' CHECK(status IN ('A','I')),
+    status VARCHAR(1) NOT NULL DEFAULT 'A' CHECK(status IN ('A','I')),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT NULL
 );
@@ -32,6 +34,9 @@ COMMENT ON COLUMN pos_system_products.stock IS
 
 COMMENT ON COLUMN pos_system_products.minimum_stock IS
 'Cantidad minima de productos tiene que ser positivo';
+
+COMMENT ON COLUMN pos_system_products.slug IS
+'Etiqueta unica de indentificacion del producto';
 
 COMMENT ON COLUMN pos_system_products.sku IS
 'Codigo unico de indentificacion del producto';
