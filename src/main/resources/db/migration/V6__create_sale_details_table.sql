@@ -4,7 +4,7 @@ CREATE TABLE pos_system_sale_details (
     product_id BIGINT NOT NULL,
     quantity INTEGER NOT NULL DEFAULT 0 CHECK(quantity>=0),
     unit_price NUMERIC(7,2) NOT NULL DEFAULT 1 CHECK(unit_price>0),
-    subtotal NUMERIC(10,2) NOT NULL DEFAULT 0 CHECK(subtotal>=0),
+    amount NUMERIC(10,2) NOT NULL DEFAULT 0 CHECK(amount>=0),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -26,8 +26,8 @@ COMMENT ON COLUMN pos_system_sale_details.quantity IS
 COMMENT ON COLUMN pos_system_sale_details.unit_price IS
 'Precio de unidad de producto debe ser positivo';
 
-COMMENT ON COLUMN pos_system_sale_details.subtotal IS
-'Subtotal de la venta que se calcula quantity * unit_price';
+COMMENT ON COLUMN pos_system_sale_details.amount IS
+'total de la venta que se calcula quantity * unit_price';
 
 COMMENT ON COLUMN pos_system_sale_details.created_at IS
 'Fecha de creacion de la venta';
