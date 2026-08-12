@@ -6,7 +6,8 @@ CREATE TABLE pos_system_users (
     full_name VARCHAR(220) NOT NULL,
     username VARCHAR(60) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    status CHAR(1) NOT NULL DEFAULT 'A' CHECK(status IN ('A','I')),
+    status VARCHAR(1) NOT NULL DEFAULT 'A' CHECK(status IN ('A','I')),
+    soft_delete TIMESTAMP DEFAULT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT NULL
 );
@@ -37,6 +38,9 @@ COMMENT ON COLUMN pos_system_users.password IS
 
 COMMENT ON COLUMN pos_system_users.status IS
 'Estado del usuario: A = activo, I = inactivo';
+
+COMMENT ON COLUMN pos_system_users.soft_delete IS
+'Fecha se elimina cuenta de usuario';
 
 COMMENT ON COLUMN pos_system_users.created_at IS
 'Fecha de creacion de usuario';
