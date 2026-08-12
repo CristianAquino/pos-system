@@ -3,7 +3,7 @@ CREATE TABLE pos_system_inventory_movements (
     product_id BIGINT NOT NULL,
     user_id UUID NOT NULL,
     sale_id UUID NOT NULL,
-    type VARCHAR(10) NOT NULL DEFAULT 'SALE' CHECK(type in ('SALE', 'PURCHASE', 'ADJUSTMENT', 'RETURN')),
+    type VARCHAR(10) NOT NULL DEFAULT 'VENTA' CHECK(type in ('VENTA', 'COMPRA', 'AJUSTE', 'DEVOLUCION')),
     quantity INTEGER NOT NULL DEFAULT 0 CHECK(quantity>=0),
     previous_stock INTEGER NOT NULL DEFAULT 0 CHECK(previous_stock>=0),
     new_stock INTEGER NOT NULL DEFAULT 0 CHECK(new_stock>=0),
@@ -27,7 +27,7 @@ COMMENT ON COLUMN pos_system_inventory_movements.sale_id IS
 'Relacion con venta';
 
 COMMENT ON COLUMN pos_system_inventory_movements.type IS
-'Tipo de movimiento realizado, puede ser: SALE, PURCHASE, ADJUSTMENT, RETURN';
+'Tipo de movimiento realizado, puede ser: VENTA, COMPRA, AJUSTE, DEVOLUCION';
 
 COMMENT ON COLUMN pos_system_inventory_movements.quantity IS
 'Cantidad que dependiendo del tipo pueder ser retirada, ingresada, devuelta, etc, debe ser positivo';
