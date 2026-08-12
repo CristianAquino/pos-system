@@ -19,7 +19,7 @@ BEGIN
     -- inactivando caja registradora
     UPDATE pos_system_cash_registers
     SET status = 'I'
-    WHERE id = NEW.cash_register_id;
+    WHERE id = NEW.cash_register_id AND soft_delete IS NULL;
 
     -- obteniendo totales de las ventas
     FOR v_sale IN
