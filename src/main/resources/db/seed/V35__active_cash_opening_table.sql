@@ -27,7 +27,7 @@ BEGIN
             WHERE id IN (
                 SELECT id
                 FROM pos_system_cash_registers
-                WHERE status = 'I'
+                WHERE status = 'I' AND soft_delete IS NULL
                 ORDER BY RANDOM()
                 LIMIT v_random
             )
