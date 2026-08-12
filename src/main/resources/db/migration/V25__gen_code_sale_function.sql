@@ -26,7 +26,7 @@ BEGIN
     END;
 
     NEW.sale_code := v_code;
-    NEW.tax := v_tax;
+    NEW.ptax := v_tax;
 
     RETURN NEW;
 
