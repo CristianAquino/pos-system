@@ -1,7 +1,8 @@
 CREATE TABLE pos_system_cash_registers (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     name VARCHAR(10) NOT NULL UNIQUE,
-    status CHAR(1) NOT NULL DEFAULT 'I' CHECK(status IN ('A','I')),
+    status VARCHAR(1) NOT NULL DEFAULT 'I' CHECK(status IN ('A','I')),
+    soft_delete TIMESTAMP DEFAULT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT NULL
 );
@@ -17,6 +18,9 @@ COMMENT ON COLUMN pos_system_cash_registers.name IS
 
 COMMENT ON COLUMN pos_system_cash_registers.status IS
 'Estado de la caja registradora: A = activo, I = inactivo';
+
+COMMENT ON COLUMN pos_system_cash_registers.soft_delete IS
+'Fecha se elimina caja registradora';
 
 COMMENT ON COLUMN pos_system_cash_registers.created_at IS
 'Fecha de creacion de la caja registradora';
