@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Generated;
 
 import java.time.OffsetDateTime;
 
@@ -20,8 +21,9 @@ public class TaxRateEntity {
     private Integer rate = 18;
     @Column(length = 1, nullable = false)
     private String status = "A";
-    @Column(name = "effective_from")
-    private OffsetDateTime effectiveFrom = OffsetDateTime.now();
+    @Generated
+    @Column(name = "effective_from", nullable = false, insertable = false, updatable = false)
+    private OffsetDateTime effectiveFrom;
     @Column(name = "effective_to")
     private OffsetDateTime effectiveTo;
 }
