@@ -7,9 +7,9 @@ CREATE TABLE pos_system_users (
     username VARCHAR(60) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     status VARCHAR(1) NOT NULL DEFAULT 'A' CHECK(status IN ('A','I')),
-    soft_delete TIMESTAMP DEFAULT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT NULL
+    soft_delete TIMESTAMPTZ DEFAULT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT NULL
 );
 
 COMMENT ON TABLE pos_system_users IS

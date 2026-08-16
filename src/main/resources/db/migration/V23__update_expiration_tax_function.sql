@@ -3,8 +3,8 @@ CREATE OR REPLACE FUNCTION fn_expiration_tax()
 RETURNS TRIGGER AS $$
 BEGIN
     UPDATE pos_system_tax_rates
-    SET effective_to = NOW()
-    WHERE effective_to IS NULL;
+    SET effective_to = NOW(), status = 'I'
+    WHERE effective_to IS NULL AND status = 'A';
 
     RETURN NEW;
 END;

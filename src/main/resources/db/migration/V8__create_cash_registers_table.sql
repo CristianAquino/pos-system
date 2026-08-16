@@ -2,9 +2,9 @@ CREATE TABLE pos_system_cash_registers (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     name VARCHAR(10) NOT NULL UNIQUE,
     status VARCHAR(1) NOT NULL DEFAULT 'I' CHECK(status IN ('A','I')),
-    soft_delete TIMESTAMP DEFAULT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT NULL
+    soft_delete TIMESTAMPTZ DEFAULT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT NULL
 );
 
 COMMENT ON TABLE pos_system_cash_registers IS

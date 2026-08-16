@@ -5,7 +5,7 @@ CREATE TABLE pos_system_sale_details (
     quantity INTEGER NOT NULL DEFAULT 0 CHECK(quantity>=0),
     unit_price NUMERIC(7,2) NOT NULL DEFAULT 1 CHECK(unit_price>0),
     amount NUMERIC(10,2) NOT NULL DEFAULT 0 CHECK(amount>=0),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 COMMENT ON TABLE pos_system_sale_details IS

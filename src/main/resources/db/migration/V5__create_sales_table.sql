@@ -5,12 +5,12 @@ CREATE TABLE pos_system_sales (
     payment_method_id BIGINT NOT NULL,
     sale_code VARCHAR(200) DEFAULT NULL,
     subtotal NUMERIC(10,2) NOT NULL DEFAULT 0 CHECK(subtotal>=0),
-    ptax INTEGER NOT NULL DEFAULT 0 CHECK(ptax>=0),
+    ptax INTEGER NOT NULL DEFAULT 18 CHECK(ptax>0),
     tax NUMERIC(10,2) NOT NULL DEFAULT 0 CHECK(tax>=0),
     total NUMERIC(10,2) NOT NULL DEFAULT 0 CHECK(total>=0),
     status VARCHAR(1) NOT NULL DEFAULT 'A' CHECK(status IN ('A','I')),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT NULL
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT NULL
 );
 
 COMMENT ON TABLE pos_system_sales IS

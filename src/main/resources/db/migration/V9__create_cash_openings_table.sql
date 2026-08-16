@@ -9,11 +9,11 @@ CREATE TABLE pos_system_cash_openings (
     card_amount NUMERIC(10,2) NOT NULL DEFAULT 0 CHECK(card_amount>=0),
     closing_amount NUMERIC(10,2) DEFAULT NULL CHECK(closing_amount>=0),
     expect_cash_amount NUMERIC(10,2) DEFAULT NULL CHECK(expect_cash_amount>=0),
-    opened_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    closed_at TIMESTAMP DEFAULT NULL,
+    opened_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    closed_at TIMESTAMPTZ DEFAULT NULL,
     status VARCHAR(1) NOT NULL DEFAULT 'A' CHECK(status IN ('A','I')),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT NULL
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT NULL
 );
 
 COMMENT ON TABLE pos_system_cash_openings IS
