@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
+import java.time.OffsetDateTime;
 
 @Data
 @AllArgsConstructor
@@ -20,6 +20,8 @@ public class TaxRateEntity {
     private Integer rate = 18;
     @Column(length = 1, nullable = false)
     private String status = "A";
+    @Column(name = "effective_from")
+    private OffsetDateTime effectiveFrom = OffsetDateTime.now();
     @Column(name = "effective_to")
-    private Timestamp effectiveTo = null;
+    private OffsetDateTime effectiveTo;
 }
