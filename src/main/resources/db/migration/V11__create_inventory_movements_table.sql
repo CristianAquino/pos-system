@@ -7,8 +7,8 @@ CREATE TABLE pos_system_inventory_movements (
     quantity INTEGER NOT NULL DEFAULT 0 CHECK(quantity>=0),
     previous_stock INTEGER NOT NULL DEFAULT 0 CHECK(previous_stock>=0),
     new_stock INTEGER NOT NULL DEFAULT 0 CHECK(new_stock>=0),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT NULL
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT NULL
 );
 
 COMMENT ON TABLE pos_system_inventory_movements IS

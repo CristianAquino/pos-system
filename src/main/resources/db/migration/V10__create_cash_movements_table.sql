@@ -3,7 +3,7 @@ CREATE TABLE pos_system_cash_movements (
     cash_opening_id UUID NOT NULL,
     type VARCHAR(10) NOT NULL DEFAULT 'VENTA' CHECK(type in ('INGRESO', 'GASTO', 'VENTA')),
     amount NUMERIC(10,2) NOT NULL DEFAULT 0 CHECK(amount>=0),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 COMMENT ON TABLE pos_system_cash_movements IS
