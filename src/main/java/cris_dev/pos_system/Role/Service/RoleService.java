@@ -6,10 +6,14 @@ import cris_dev.pos_system.Role.Model.DTO.Response.RoleResponse;
 
 import java.util.List;
 
-public interface IRoleService {
+public interface RoleService {
     public List<RoleResponse> allRoles(String status);
 
-    public String createRole(RoleCreateRequest role);
+    public List<RoleResponse> allRolesSoftDelete();
 
-    public String updStatusRole(RoleUpdateStatusRequest req);
+    public RoleResponse createRole(RoleCreateRequest payload);
+
+    public RoleResponse updStatusRole(RoleUpdateStatusRequest payload);
+
+    public String softDeleteRole(Long id);
 }
