@@ -11,8 +11,7 @@ import java.util.List;
 public interface ProductService {
     public Page<ProductResponse> allProducts(
             String name,
-            Pageable pageable
-                                            );
+            Pageable pageable);
 
     public List<ProductResponse> searchProducts(String search);
 
@@ -22,8 +21,7 @@ public interface ProductService {
 
     public String createProduct(ProductCreateRequest payload);
 
-    public String updateProduct(
-            ProductPatchRequest payload
-                               );
+    public ProductResponse updateProduct(
+            ProductPatchRequest payload);
 
 }

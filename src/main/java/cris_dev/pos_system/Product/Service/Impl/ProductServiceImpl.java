@@ -4,7 +4,6 @@ import cris_dev.pos_system.Product.Model.DTO.Request.ProductCreateRequest;
 import cris_dev.pos_system.Product.Model.DTO.Request.ProductPatchRequest;
 import cris_dev.pos_system.Product.Model.DTO.Response.ProductResponse;
 import cris_dev.pos_system.Product.Model.Entity.ProductEntity;
-import cris_dev.pos_system.Product.Repository.ProductJdbcRepository;
 import cris_dev.pos_system.Product.Repository.ProductRepository;
 import cris_dev.pos_system.Product.Service.ProductService;
 import cris_dev.pos_system.Product.Utils.ProductFunctions;
@@ -28,7 +27,6 @@ public class ProductServiceImpl implements ProductService {
     final ProductRepository productRepository;
     private ProductTransform productTransform;
     private ProductFunctions productFunctions;
-    final ProductJdbcRepository productJdbcRepository;
 
     @Override
     public Page<ProductResponse> allProducts(
@@ -39,9 +37,9 @@ public class ProductServiceImpl implements ProductService {
             return productRepository.findBySearchNameContaining(
                     sn,
                     pageable).map(ProductTransform::product);
-        } else {
-            return productRepository.findAll(pageable).map(ProductTransform::product);
         }
+        return productRepository.findAll(pageable).map(ProductTransform::product);
+
     }
 
     @Override
@@ -55,10 +53,10 @@ public class ProductServiceImpl implements ProductService {
         } else if (search.matches("\\d+")) {
             upc = search;
         } else {
-            sn = productFunctions.searchName(search);
+            sn = "%" + productFunctions.searchName(search) + "%";
         }
 
-        List<ProductEntity> products = productJdbcRepository.productsJdbc(
+        List<ProductEntity> products = productRepository.searchProducts(
                 sku,
                 upc,
                 sn);
@@ -123,7 +121,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     @Override
-    public String updateProduct(
+    public ProductResponse updateProduct(
             ProductPatchRequest payload) {
         ProductEntity product = productRepository.findById(payload.id()).orElseThrow(() -> new ResponseStatusException(
                 HttpStatus.NOT_FOUND,
@@ -160,6 +158,8 @@ public class ProductServiceImpl implements ProductService {
             product.setStatus(payload.status());
         }
 
-        return "producto " + product.getName() + " actualizado correctamente";
+        ProductEntity nProduct = productRepository.save(product);
+
+        return productTransform.product(nProduct);
     }
 }
