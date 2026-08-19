@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,38 +33,38 @@ public class ProductController {
         Page<ProductResponse> products = productService.allProducts(
                 name,
                 pageable);
-        return ResponseEntity.status(200).body(products);
+        return ResponseEntity.status(HttpStatus.OK).body(products);
     }
 
     @GetMapping("/search")
     public ResponseEntity<List<ProductResponse>> searchProducts(@RequestParam String q) {
         List<ProductResponse> products = productService.searchProducts(q);
-        return ResponseEntity.status(200).body(products);
+        return ResponseEntity.status(HttpStatus.OK).body(products);
     }
 
     @GetMapping("/{slug}")
     public ResponseEntity<ProductResponse> productById(@PathVariable String slug) {
         ProductResponse product = productService.getProduct(slug);
-        return ResponseEntity.status(200).body(product);
+        return ResponseEntity.status(HttpStatus.OK).body(product);
     }
 
     // metodo auxiliar
     @GetMapping("/generate")
     public ResponseEntity<String> generateSlug() {
         String msg = productService.generateProduct();
-        return ResponseEntity.status(200).body(msg);
+        return ResponseEntity.status(HttpStatus.OK).body(msg);
     }
 
     @PostMapping("/create")
     public ResponseEntity<String> createProduct(@Valid @RequestBody ProductCreateRequest payload) {
         String msg = productService.createProduct(payload);
-        return ResponseEntity.status(200).body(msg);
+        return ResponseEntity.status(HttpStatus.CREATED).body(msg);
     }
 
     @PatchMapping("/update")
-    public ResponseEntity<String> patchProduct(
+    public ResponseEntity<ProductResponse> patchProduct(
             @Valid @RequestBody ProductPatchRequest payload) {
-        String msg = productService.updateProduct(payload);
-        return ResponseEntity.status(200).body(msg);
+        ProductResponse product = productService.updateProduct(payload);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(product);
     }
 }
