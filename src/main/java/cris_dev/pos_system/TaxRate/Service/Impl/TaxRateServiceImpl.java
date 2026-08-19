@@ -28,7 +28,9 @@ public class TaxRateServiceImpl implements TaxRateService {
 
     @Override
     public TaxRateResponse current() {
-        TaxRateEntity current = taxRateRepository.findByStatusAndEffectiveToIsNull("A");
+        TaxRateEntity current = taxRateRepository.findByStatusAndEffectiveToIsNull("A").orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND,
+                "No hay tax en vigencia actualmente"));
         return taxRateTransform.tax(current);
     }
 
@@ -36,7 +38,7 @@ public class TaxRateServiceImpl implements TaxRateService {
     public TaxRateResponse tax(Long id) {
         TaxRateEntity tax = taxRateRepository.findById(id).orElseThrow(() -> new ResponseStatusException(
                 HttpStatus.NOT_FOUND,
-                "Tax no encontrado"));
+                "Tax no existe"));
         return taxRateTransform.tax(tax);
     }
 
