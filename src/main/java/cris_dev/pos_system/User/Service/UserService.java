@@ -1,7 +1,7 @@
 package cris_dev.pos_system.User.Service;
 
-import cris_dev.pos_system.User.Model.DTO.Request.UserCreateRequest;
 import cris_dev.pos_system.User.Model.DTO.Request.UserPatchRequest;
+import cris_dev.pos_system.User.Model.DTO.Response.UserNormalResponse;
 import cris_dev.pos_system.User.Model.DTO.Response.UserResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,7 +17,5 @@ public interface UserService {
 
     public UserResponse getUser(UUID id);
 
-    public String createUser(UserCreateRequest payload);
-
-    public UserResponse updateUser(UserPatchRequest payload);
+    public UserNormalResponse updateUser(UserPatchRequest payload);
 }

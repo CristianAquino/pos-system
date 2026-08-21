@@ -1,7 +1,7 @@
 package cris_dev.pos_system.User.Service.Impl;
 
-import cris_dev.pos_system.User.Model.DTO.Request.UserCreateRequest;
 import cris_dev.pos_system.User.Model.DTO.Request.UserPatchRequest;
+import cris_dev.pos_system.User.Model.DTO.Response.UserNormalResponse;
 import cris_dev.pos_system.User.Model.DTO.Response.UserResponse;
 import cris_dev.pos_system.User.Model.Entity.UserEntity;
 import cris_dev.pos_system.User.Repository.UserRepository;
@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
@@ -33,13 +34,14 @@ public class UserServiceImpl implements UserService {
             String description,
             Pageable pageable) {
 
-        if (!description.trim().matches("^[a-zA-Z_]+$")) {
+        String tDescrip = description.trim().toUpperCase();
+
+        if (!tDescrip.matches("^[a-zA-Z_]+$")) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
                     "usuarios con rol " + description + " no encontrados");
         }
 
-        String tDescrip = description.trim().toUpperCase();
         String code = userRepository.getRoleCode(tDescrip).orElseThrow(() -> new ResponseStatusException(
                 HttpStatus.NOT_FOUND,
                 "usuarios con rol " + description + " no encontrados"));
@@ -57,13 +59,28 @@ public class UserServiceImpl implements UserService {
         return userTransform.getUser(user);
     }
 
+    @Transactional
     @Override
-    public String createUser(UserCreateRequest payload) {
-        return "";
-    }
+    public UserNormalResponse updateUser(UserPatchRequest payload) {
+        UserEntity user = userRepository.findById(payload.id()).orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND,
+                "usuario no encontrado"));
 
-    @Override
-    public UserResponse updateUser(UserPatchRequest payload) {
-        return null;
+        if (payload.name() != null) {
+            user.setName(payload.name().trim());
+        }
+        if (payload.fatherLastName() != null) {
+            user.setFatherLastName(payload.fatherLastName().trim());
+        }
+        if (payload.motherLastName() != null) {
+            user.setMotherLastName(payload.motherLastName().trim());
+        }
+        if (payload.status() != null) {
+            user.setStatus(payload.status().trim());
+        }
+
+        UserEntity nUser = userRepository.save(user);
+
+        return userTransform.normalUser(nUser);
     }
 }
