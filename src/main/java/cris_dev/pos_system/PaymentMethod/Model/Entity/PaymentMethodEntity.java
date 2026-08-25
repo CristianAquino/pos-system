@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Getter
@@ -22,10 +22,10 @@ public class PaymentMethodEntity {
     private Long id;
     @OneToMany(mappedBy = "paymentMethod")
     private List<SaleEntity> sales;
-    @Column(length = 10, nullable = false)
+    @Column(length = 16, nullable = false)
     private String name = "CONTADO";
     @Column(length = 1, nullable = false)
     private String status = "A";
     @Column(name = "soft_delete")
-    private LocalDateTime softDelete;
+    private OffsetDateTime softDelete;
 }
