@@ -1,6 +1,6 @@
 CREATE TABLE pos_system_cash_registers (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    name VARCHAR(10) NOT NULL UNIQUE,
+    name VARCHAR(16) NOT NULL UNIQUE,
     status VARCHAR(1) NOT NULL DEFAULT 'I' CHECK(status IN ('A','I')),
     soft_delete TIMESTAMPTZ DEFAULT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
