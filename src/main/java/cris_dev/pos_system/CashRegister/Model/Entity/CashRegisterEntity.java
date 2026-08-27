@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,10 +23,10 @@ public class CashRegisterEntity {
     private UUID id;
     @OneToMany(mappedBy = "cashRegister")
     private List<CashOpeningEntity> cashOpenings;
-    @Column(length = 10, nullable = false)
+    @Column(length = 16, nullable = false)
     private String name;
     @Column(length = 1, nullable = false)
-    private String status = "A";
+    private String status = "I";
     @Column(name = "soft_delete")
-    private LocalDateTime softDelete;
+    private OffsetDateTime softDelete;
 }
