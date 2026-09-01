@@ -1,16 +1,10 @@
 package cris_dev.pos_system.Role.Model.DTO.Request;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
 
 public record RoleUpdateStatusRequest(
-        @NotNull
-        @Positive
-        Long id,
-        @Size(max = 1)
-        @Pattern(regexp = "^[aiAI]$")
+        @NotBlank(message = "este campo es obligatorio")
+        @Pattern(regexp = "^[aiAI]$", message = "solamente se acepta A o I")
         String status) {
-
 }

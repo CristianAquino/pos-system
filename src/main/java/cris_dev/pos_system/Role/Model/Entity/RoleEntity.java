@@ -7,8 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-import java.util.Set;
+import java.time.OffsetDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -21,13 +21,13 @@ public class RoleEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToMany(mappedBy = "roles")
-    private Set<UserEntity> users;
+    private List<UserEntity> users;
     @Column(length = 6, nullable = false)
     private String code;
-    @Column(length = 10, nullable = false)
+    @Column(length = 16, nullable = false)
     private String description;
     @Column(length = 1, nullable = false)
     private String status = "A";
     @Column(name = "soft_delete")
-    private LocalDateTime softDelete;
+    private OffsetDateTime softDelete;
 }
