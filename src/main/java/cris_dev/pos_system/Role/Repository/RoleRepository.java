@@ -15,13 +15,25 @@ import java.util.Optional;
 public interface RoleRepository extends JpaRepository<RoleEntity, Long> {
     @Modifying
     @Query("""
-                UPDATE RoleEntity p
-                SET p.softDelete = CURRENT_TIMESTAMP, p.status = 'I'
-                WHERE p.id = :id
+                UPDATE RoleEntity r
+                SET r.softDelete = CURRENT_TIMESTAMP, r.status = 'I'
+                WHERE r.code = :code
             """)
-    Optional<Integer> softDelete(@Param("id") Long id);
+    Integer softDelete(@Param("code") String code);
 
-    Optional<RoleEntity> findByDescription(String description);
+    @Modifying
+    @Query("""
+                UPDATE RoleEntity r
+                SET r.softDelete = null, r.status = 'A'
+                WHERE r.code = :code
+            """)
+    Integer restoreSoftDelete(@Param("code") String code);
+
+    Optional<RoleEntity> findByCode(String code);
+
+    boolean existsByCode(String code);
+
+    boolean existsByDescription(String description);
 
     List<RoleEntity> findBySoftDeleteIsNull();
 
