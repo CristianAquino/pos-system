@@ -2,10 +2,12 @@ package cris_dev.pos_system.Role.Service.Impl;
 
 import cris_dev.pos_system.Role.Model.DTO.Request.RoleCreateRequest;
 import cris_dev.pos_system.Role.Model.DTO.Request.RoleUpdateStatusRequest;
+import cris_dev.pos_system.Role.Model.DTO.Response.RoleIdResponse;
 import cris_dev.pos_system.Role.Model.DTO.Response.RoleResponse;
 import cris_dev.pos_system.Role.Model.Entity.RoleEntity;
 import cris_dev.pos_system.Role.Repository.RoleRepository;
 import cris_dev.pos_system.Role.Service.RoleService;
+import cris_dev.pos_system.Role.Utils.RoleTransform;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -23,79 +25,102 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public List<RoleResponse> allRoles(String status) {
         if (status == null) {
-            return getAll(roleRepository.findBySoftDeleteIsNull());
+            return RoleTransform.roleList(roleRepository.findBySoftDeleteIsNull());
         }
         String nStatus = status.trim().toUpperCase();
-        return getAll(roleRepository.findByStatusAndSoftDeleteIsNull(nStatus));
+        return RoleTransform.roleList(roleRepository.findByStatusAndSoftDeleteIsNull(nStatus));
     }
 
     @Override
     public List<RoleResponse> allRolesSoftDelete() {
-        return getAll(roleRepository.findBySoftDeleteIsNotNull());
+        return RoleTransform.roleList(roleRepository.findBySoftDeleteIsNotNull());
     }
 
     @Override
-    public RoleResponse createRole(RoleCreateRequest payload) {
-        String role_ = payload.description().trim().toUpperCase();
+    public RoleIdResponse getRole(String code) {
+        RoleEntity rol = roleRepository.findByCode(code).orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND,
+                "role no encontrado"));
 
-        roleRepository.findByDescription(role_).orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.CONFLICT,
-                "rol " + payload.description() + " ya existe"));
-
-        RoleEntity newRole = new RoleEntity();
-
-        newRole.setDescription(role_);
-        RoleEntity role = roleRepository.save(newRole);
-        return new RoleResponse(
-                role.getId(),
-                role.getCode(),
-                role.getDescription(),
-                role.getStatus());
+        return RoleTransform.roleId(rol);
     }
 
     @Transactional
     @Override
-    public RoleResponse updStatusRole(RoleUpdateStatusRequest payload) {
-        RoleEntity role = roleRepository.findById(payload.id()).orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND,
-                "usuario no encontrado"));
+    public RoleResponse createRole(RoleCreateRequest payload) {
+        String description = payload.description().trim().toUpperCase();
 
-        if (role.getStatus().equals(payload.status().toUpperCase())) {
+        if (roleRepository.existsByDescription(description)) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "rol " + payload.description() + " ya existe");
+        }
+
+        RoleEntity nRole = new RoleEntity();
+        nRole.setDescription(description);
+
+        RoleEntity role = roleRepository.save(nRole);
+
+        return RoleTransform.role(role);
+    }
+
+    @Transactional
+    @Override
+    public RoleResponse updStatusRole(
+            String code,
+            RoleUpdateStatusRequest payload) {
+        RoleEntity role = roleRepository.findByCode(code).orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND,
+                "role no encontrado"));
+
+        String nStatus = payload.status().trim().toUpperCase();
+
+        if (role.getStatus().equals(nStatus)) {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
                     "Estado repetido, no se realizaron cambios");
         }
 
-        role.setStatus(payload.status().toUpperCase());
-        RoleEntity role_ = roleRepository.save(role);
+        role.setStatus(nStatus);
 
-        return new RoleResponse(
-                role_.getId(),
-                role_.getCode(),
-                role_.getDescription(),
-                role_.getStatus());
+        return RoleTransform.role(role);
     }
 
     @Transactional
     @Override
-    public String softDeleteRole(Long id) {
-        RoleEntity role = roleRepository.findById(id).orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND,
-                "No se pudo encontrar el rol"));
+    public String softDeleteRole(String code) {
+        if (!roleRepository.existsByCode(code)) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "No se pudo encontrar el rol");
+        }
+        int affected = roleRepository.softDelete(code);
 
-        roleRepository.softDelete(id).orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.BAD_REQUEST,
-                "No se pudo realizar la eliminacion del rol " + role.getDescription()));
+        if (affected == 0) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "No se pudo realizar la eliminacion del rol");
+        }
 
-        return "Se elimino el role " + role.getDescription();
+        return "Se realizo la eliminacion del rol";
     }
 
-    public static List<RoleResponse> getAll(List<RoleEntity> entity) {
-        List<RoleResponse> roles = entity.stream().map(role -> new RoleResponse(
-                role.getId(),
-                role.getCode(),
-                role.getDescription(),
-                role.getStatus())).toList();
-        return roles;
+    @Transactional
+    @Override
+    public String restoreSoftDeleteCashRegister(String code) {
+        if (!roleRepository.existsByCode(code)) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "No se pudo encontrar el rol");
+        }
+        int affected = roleRepository.restoreSoftDelete(code);
+
+        if (affected == 0) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "No se pudo realizar la restauracion del rol");
+        }
+
+        return "Se realizo la restauracion del rol";
     }
 }
