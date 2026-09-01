@@ -2,6 +2,7 @@ package cris_dev.pos_system.Role.Controller;
 
 import cris_dev.pos_system.Role.Model.DTO.Request.RoleCreateRequest;
 import cris_dev.pos_system.Role.Model.DTO.Request.RoleUpdateStatusRequest;
+import cris_dev.pos_system.Role.Model.DTO.Response.RoleIdResponse;
 import cris_dev.pos_system.Role.Model.DTO.Response.RoleResponse;
 import cris_dev.pos_system.Role.Service.RoleService;
 import jakarta.validation.Valid;
@@ -29,29 +30,47 @@ public class RoleController {
         return ResponseEntity.status(HttpStatus.OK).body(roles);
     }
 
-    @GetMapping("soft_delete/all")
+    @GetMapping("all/soft_delete")
     public ResponseEntity<List<RoleResponse>> allRolesSoftDelete() {
         List<RoleResponse> roles = roleService.allRolesSoftDelete();
         return ResponseEntity.status(HttpStatus.OK).body(roles);
     }
 
+    @GetMapping("{code}")
+    public ResponseEntity<RoleIdResponse> roleId(
+            @Valid @Pattern(regexp = "^\\d{6}$") @PathVariable String code) {
+        RoleIdResponse role = roleService.getRole(code);
+        return ResponseEntity.status(HttpStatus.OK).body(role);
+    }
+
     @PostMapping("create")
     public ResponseEntity<RoleResponse> createRole(
-            @RequestBody @Valid RoleCreateRequest payload) {
+            @Valid @RequestBody RoleCreateRequest payload) {
         RoleResponse role = roleService.createRole(payload);
         return ResponseEntity.status(HttpStatus.OK).body(role);
     }
 
-    @PutMapping("update/status")
+    @PutMapping("update/{code}")
     public ResponseEntity<RoleResponse> updatedStatus(
-            @RequestBody @Valid RoleUpdateStatusRequest req) {
-        RoleResponse role = roleService.updStatusRole(req);
+            @Valid @Pattern(regexp = "^\\d{6}$") @PathVariable String code,
+            @Valid @RequestBody RoleUpdateStatusRequest req) {
+        RoleResponse role = roleService.updStatusRole(
+                code,
+                req);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(role);
     }
 
-    @PutMapping("soft_delete/{id}")
-    public ResponseEntity<String> updatedSoftDelete(@PathVariable Long id) {
-        String msg = roleService.softDeleteRole(id);
+    @PutMapping("soft_delete/{code}")
+    public ResponseEntity<String> updatedSoftDelete(
+            @Valid @Pattern(regexp = "^\\d{6}$") @PathVariable String code) {
+        String msg = roleService.softDeleteRole(code);
+        return ResponseEntity.status(HttpStatus.OK).body(msg);
+    }
+
+    @PutMapping("restore/{code}")
+    public ResponseEntity<String> restoreSoftDelete(
+            @Valid @Pattern(regexp = "^\\d{6}$") @PathVariable String code) {
+        String msg = roleService.restoreSoftDeleteCashRegister(code);
         return ResponseEntity.status(HttpStatus.OK).body(msg);
     }
 }
