@@ -1,7 +1,6 @@
 package cris_dev.pos_system.Role.Controller;
 
 import cris_dev.pos_system.Role.Model.DTO.Request.RoleCreateRequest;
-import cris_dev.pos_system.Role.Model.DTO.Request.RoleUpdateStatusRequest;
 import cris_dev.pos_system.Role.Model.DTO.Response.RoleIdResponse;
 import cris_dev.pos_system.Role.Model.DTO.Response.RoleResponse;
 import cris_dev.pos_system.Role.Service.RoleService;
@@ -52,11 +51,8 @@ public class RoleController {
 
     @PutMapping("update/{code}")
     public ResponseEntity<RoleResponse> updatedStatus(
-            @Valid @Pattern(regexp = "^\\d{6}$") @PathVariable String code,
-            @Valid @RequestBody RoleUpdateStatusRequest req) {
-        RoleResponse role = roleService.updStatusRole(
-                code,
-                req);
+            @Valid @Pattern(regexp = "^\\d{6}$") @PathVariable String code) {
+        RoleResponse role = roleService.updStatusRole(code);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(role);
     }
 
@@ -70,7 +66,7 @@ public class RoleController {
     @PutMapping("restore/{code}")
     public ResponseEntity<String> restoreSoftDelete(
             @Valid @Pattern(regexp = "^\\d{6}$") @PathVariable String code) {
-        String msg = roleService.restoreSoftDeleteCashRegister(code);
+        String msg = roleService.restoreSoftDeleteRole(code);
         return ResponseEntity.status(HttpStatus.OK).body(msg);
     }
 }

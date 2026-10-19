@@ -7,6 +7,6 @@ import jakarta.validation.constraints.Size;
 public record RoleCreateRequest(
         @NotBlank(message = "el nombre del rol es obligatorio")
         @Size(max = 16, message = "El nombre no puede superar los 16 caracteres")
-        @Pattern(regexp = "^[a-zA-Z_]+$", message = "el rol no puede contener " + "caracteres diferen a letras y guiones bajos")
+        @Pattern(regexp = "^[a-zA-Z_]+$", message = "el rol no puede contener" + " caracteres diferente a letras y guiones bajos")
         String description) {
 }

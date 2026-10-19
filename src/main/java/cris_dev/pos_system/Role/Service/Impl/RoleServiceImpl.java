@@ -1,7 +1,6 @@
 package cris_dev.pos_system.Role.Service.Impl;
 
 import cris_dev.pos_system.Role.Model.DTO.Request.RoleCreateRequest;
-import cris_dev.pos_system.Role.Model.DTO.Request.RoleUpdateStatusRequest;
 import cris_dev.pos_system.Role.Model.DTO.Response.RoleIdResponse;
 import cris_dev.pos_system.Role.Model.DTO.Response.RoleResponse;
 import cris_dev.pos_system.Role.Model.Entity.RoleEntity;
@@ -67,21 +66,16 @@ public class RoleServiceImpl implements RoleService {
     @Transactional
     @Override
     public RoleResponse updStatusRole(
-            String code,
-            RoleUpdateStatusRequest payload) {
+            String code) {
         RoleEntity role = roleRepository.findByCode(code).orElseThrow(() -> new ResponseStatusException(
                 HttpStatus.NOT_FOUND,
                 "role no encontrado"));
 
-        String nStatus = payload.status().trim().toUpperCase();
-
-        if (role.getStatus().equals(nStatus)) {
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT,
-                    "Estado repetido, no se realizaron cambios");
+        if (role.getStatus().equals("A")) {
+            role.setStatus("I");
+        } else {
+            role.setStatus("A");
         }
-
-        role.setStatus(nStatus);
 
         return RoleTransform.role(role);
     }
@@ -89,10 +83,10 @@ public class RoleServiceImpl implements RoleService {
     @Transactional
     @Override
     public String softDeleteRole(String code) {
-        if (!roleRepository.existsByCode(code)) {
+        if (!roleRepository.existsByCodeAndSoftDeleteIsNull(code)) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
-                    "No se pudo encontrar el rol");
+                    "No se pudo encontrar el rol o ya se encuentra eliminado");
         }
         int affected = roleRepository.softDelete(code);
 
@@ -107,11 +101,11 @@ public class RoleServiceImpl implements RoleService {
 
     @Transactional
     @Override
-    public String restoreSoftDeleteCashRegister(String code) {
-        if (!roleRepository.existsByCode(code)) {
+    public String restoreSoftDeleteRole(String code) {
+        if (!roleRepository.existsByCodeAndSoftDeleteIsNotNull(code)) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
-                    "No se pudo encontrar el rol");
+                    "No se pudo encontrar el rol o ya se encuentra restaurado");
         }
         int affected = roleRepository.restoreSoftDelete(code);
 
