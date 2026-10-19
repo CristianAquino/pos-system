@@ -31,9 +31,13 @@ public interface RoleRepository extends JpaRepository<RoleEntity, Long> {
 
     Optional<RoleEntity> findByCode(String code);
 
-    boolean existsByCode(String code);
+    Boolean existsByCode(String code);
 
-    boolean existsByDescription(String description);
+    Boolean existsByCodeAndSoftDeleteIsNull(String code);
+
+    Boolean existsByCodeAndSoftDeleteIsNotNull(String code);
+
+    Boolean existsByDescription(String description);
 
     List<RoleEntity> findBySoftDeleteIsNull();
 
