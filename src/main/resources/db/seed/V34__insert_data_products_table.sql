@@ -13,8 +13,8 @@ INSERT INTO pos_system_products (
     5.50,
     120,
     20,
-    'SKU000000001',
-    '7751234567001'
+    'ARR-EXT-1KG',
+    '751234567001'
 ),
 (
     'Azucar Rubia 1Kg',
@@ -22,8 +22,8 @@ INSERT INTO pos_system_products (
     4.20,
     85,
     15,
-    'SKU000000002',
-    '7751234567002'
+    'AZU-RUB-1KG',
+    '751234567002'
 ),
 (
     'Leche Evaporada',
@@ -31,8 +31,8 @@ INSERT INTO pos_system_products (
     4.80,
     150,
     30,
-    'SKU000000003',
-    '7751234567003'
+    'LECH-EVAP',
+    '751234567003'
 ),
 (
     'Aceite Vegetal 1L',
@@ -40,8 +40,8 @@ INSERT INTO pos_system_products (
     9.90,
     45,
     10,
-    'SKU000000004',
-    '7751234567004'
+    'ACE-VEG-1L',
+    '751234567004'
 ),
 (
     'Fideos Spaghetti 500g',
@@ -49,8 +49,8 @@ INSERT INTO pos_system_products (
     3.50,
     70,
     15,
-    'SKU000000005',
-    '7751234567005'
+    'FID-SPAG-500G',
+    '751234567005'
 ),
 (
     'Gaseosa Cola 3L',
@@ -58,8 +58,8 @@ INSERT INTO pos_system_products (
     12.50,
     25,
     8,
-    'SKU000000006',
-    '7751234567006'
+    'GAS-COLA-3L',
+    '751234567006'
 ),
 (
     'Agua Mineral 625ml',
@@ -67,8 +67,8 @@ INSERT INTO pos_system_products (
     2.00,
     200,
     30,
-    'SKU000000007',
-    '7751234567007'
+    'AGUA-MIN-625ML',
+    '751234567007'
 ),
 (
     'Jabon de Tocador',
@@ -76,8 +76,8 @@ INSERT INTO pos_system_products (
     2.80,
     60,
     10,
-    'SKU000000008',
-    '7751234567008'
+    'JAB-TOC',
+    '751234567008'
 ),
 (
     'Detergente 800g',
@@ -85,8 +85,8 @@ INSERT INTO pos_system_products (
     8.50,
     18,
     10,
-    'SKU000000009',
-    '7751234567009'
+    'DET-800G',
+    '751234567009'
 ),
 (
     'Papel Higienico x4',
@@ -94,8 +94,8 @@ INSERT INTO pos_system_products (
     6.90,
     35,
     12,
-    'SKU000000010',
-    '7751234567010'
+    'PAPE-HIGI-X4',
+    '751234567010'
 ),
 (
     'Cafe Instantaneo 200g',
@@ -103,8 +103,8 @@ INSERT INTO pos_system_products (
     14.90,
     12,
     5,
-    'SKU000000011',
-    '7751234567011'
+    'CAFE-INS-200G',
+    '751234567011'
 ),
 (
     'Chocolate en Barra',
@@ -112,8 +112,8 @@ INSERT INTO pos_system_products (
     3.20,
     90,
     20,
-    'SKU000000012',
-    '7751234567012'
+    'CHOC-BAR',
+    '751234567012'
 ),
 (
     'Atun en Lata',
@@ -121,8 +121,8 @@ INSERT INTO pos_system_products (
     6.50,
     55,
     10,
-    'SKU000000013',
-    '7751234567013'
+    'ATUN-LATA',
+    '751234567013'
 ),
 (
     'Galletas de Vainilla',
@@ -130,8 +130,8 @@ INSERT INTO pos_system_products (
     2.50,
     100,
     20,
-    'SKU000000014',
-    '7751234567014'
+    'GALL-VAIN',
+    '751234567014'
 ),
 (
     'Shampoo 400ml',
@@ -139,8 +139,8 @@ INSERT INTO pos_system_products (
     15.90,
     8,
     5,
-    'SKU000000015',
-    '7751234567015'
+    'SHAM-400ML',
+    '751234567015'
 ),
 (
     'Cepillo Dental',
@@ -148,8 +148,8 @@ INSERT INTO pos_system_products (
     4.50,
     40,
     10,
-    'SKU000000016',
-    '7751234567016'
+    'CEP-DEN',
+    '751234567016'
 ),
 (
     'Desinfectante 1L',
@@ -157,8 +157,8 @@ INSERT INTO pos_system_products (
     7.90,
     22,
     10,
-    'SKU000000017',
-    '7751234567017'
+    'DES-1L',
+    '751234567017'
 ),
 (
     'Harina 1Kg',
@@ -166,8 +166,8 @@ INSERT INTO pos_system_products (
     4.30,
     65,
     15,
-    'SKU000000018',
-    '7751234567018'
+    'HAR-1KG',
+    '751234567018'
 ),
 (
     'Sal de Mesa 1Kg',
@@ -175,8 +175,8 @@ INSERT INTO pos_system_products (
     2.10,
     95,
     20,
-    'SKU000000019',
-    '7751234567019'
+    'SAL-MESA-1KG',
+    '751234567019'
 ),
 (
     'Fresas congeladas 1Kg',
@@ -184,6 +184,6 @@ INSERT INTO pos_system_products (
     10.00,
     20,
     5,
-    'SKU000000020',
-    '7751234567020'
+    'FRE-CONG-1KG',
+    '751234567020'
 );

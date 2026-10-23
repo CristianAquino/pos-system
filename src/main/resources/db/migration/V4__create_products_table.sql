@@ -7,9 +7,10 @@ CREATE TABLE pos_system_products (
     minimum_stock INTEGER NOT NULL DEFAULT 1 CHECK(minimum_stock>0),
     slug TEXT DEFAULT NULL UNIQUE,
     search_name TEXT DEFAULT NULL UNIQUE,
-    sku VARCHAR(12) NOT NULL UNIQUE,
-    upc TEXT NOT NULL UNIQUE,
+    sku TEXT NOT NULL UNIQUE,
+    upc VARCHAR(12) NOT NULL UNIQUE,
     status VARCHAR(1) NOT NULL DEFAULT 'A' CHECK(status IN ('A','I')),
+    soft_delete TIMESTAMPTZ DEFAULT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ DEFAULT NULL
 );
@@ -38,14 +39,20 @@ COMMENT ON COLUMN pos_system_products.minimum_stock IS
 COMMENT ON COLUMN pos_system_products.slug IS
 'Etiqueta unica de indentificacion del producto';
 
+COMMENT ON COLUMN pos_system_products.search_name IS
+'Etiqueta unica de busqueda del producto';
+
 COMMENT ON COLUMN pos_system_products.sku IS
-'Codigo unico de indentificacion del producto';
+'Codigo unico de indentificacion del producto ademas, tiene formato alfanumerico y personalizado';
 
 COMMENT ON COLUMN pos_system_products.upc IS
-'Codigo unico de barras del producto';
+'Codigo unico de barras del producto, solo son numeros de 12 digitos';
 
 COMMENT ON COLUMN pos_system_products.status IS
 'Estado del producto: A = activo, I = inactivo';
+
+COMMENT ON COLUMN pos_system_products.soft_delete IS
+'Fecha se elimina producto';
 
 COMMENT ON COLUMN pos_system_products.created_at IS
 'Fecha de creacion de producto';
