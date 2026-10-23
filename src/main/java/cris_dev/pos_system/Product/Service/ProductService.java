@@ -9,19 +9,22 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface ProductService {
-    public Page<ProductResponse> allProducts(
+    Page<ProductResponse> allProducts(
             String name,
             Pageable pageable);
 
-    public List<ProductResponse> searchProducts(String search);
+    Page<ProductResponse> allProductsSoftDelete(
+            Pageable pageable);
 
-    public ProductResponse getProduct(String slug);
+    List<ProductResponse> searchProducts(String search);
 
-    public String generateProduct();
+    ProductResponse getProduct(String slug);
 
-    public String createProduct(ProductCreateRequest payload);
+    String generateProduct();
 
-    public ProductResponse updateProduct(
+    String createProduct(ProductCreateRequest payload);
+
+    ProductResponse updateProduct(
             ProductPatchRequest payload);
 
 }

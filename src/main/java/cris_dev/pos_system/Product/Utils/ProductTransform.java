@@ -8,24 +8,6 @@ import java.util.List;
 
 @NoArgsConstructor
 public class ProductTransform {
-    public static List<ProductResponse> allProducts(List<ProductEntity> entity) {
-        return entity
-                .stream()
-                .map(product -> new ProductResponse(
-                        product.getId(),
-                        product.getName(),
-                        product.getDescription(),
-                        product.getSalePrice(),
-                        product.getStock(),
-                        product.getMinimumStock(),
-                        product.getSlug(),
-                        product.getSearchName(),
-                        product.getSku(),
-                        product.getUpc(),
-                        product.getStatus()
-                )).toList();
-    }
-
     public static ProductResponse product(ProductEntity entity) {
         return new ProductResponse(
                 entity.getId(),
@@ -38,7 +20,10 @@ public class ProductTransform {
                 entity.getSearchName(),
                 entity.getSku(),
                 entity.getUpc(),
-                entity.getStatus()
-        );
+                entity.getStatus());
+    }
+
+    public static List<ProductResponse> productList(List<ProductEntity> entity) {
+        return entity.stream().map(ProductTransform::product).toList();
     }
 }

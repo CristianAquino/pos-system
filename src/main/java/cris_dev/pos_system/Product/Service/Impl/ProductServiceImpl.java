@@ -25,21 +25,20 @@ import java.util.Objects;
 public class ProductServiceImpl implements ProductService {
 
     final ProductRepository productRepository;
-    private ProductTransform productTransform;
-    private ProductFunctions productFunctions;
 
     @Override
     public Page<ProductResponse> allProducts(
             String name,
             Pageable pageable) {
-        if (name != null && !name.isBlank()) {
-            String sn = productFunctions.searchName(name);
-            return productRepository.findBySearchNameContaining(
-                    sn,
-                    pageable).map(ProductTransform::product);
-        }
-        return productRepository.findAll(pageable).map(ProductTransform::product);
+        String sn = name != null ? "%" + ProductFunctions.searchName(name) + "%" : null;
+        return productRepository.findBySearchNameContaining(
+                sn,
+                pageable).map(ProductTransform::product);
+    }
 
+    @Override
+    public Page<ProductResponse> allProductsSoftDelete(Pageable pageable) {
+        return productRepository.findBySoftDeleteIsNotNull(pageable).map(ProductTransform::product);
     }
 
     @Override
@@ -48,19 +47,19 @@ public class ProductServiceImpl implements ProductService {
         String upc = null;
         String sn = null;
 
-        if (search.toLowerCase().startsWith("sku")) {
+        if (search.toLowerCase().contains("-")) {
             sku = search;
         } else if (search.matches("\\d+")) {
             upc = search;
         } else {
-            sn = "%" + productFunctions.searchName(search) + "%";
+            sn = "%" + ProductFunctions.searchName(search) + "%";
         }
 
         List<ProductEntity> products = productRepository.searchProducts(
                 sku,
                 upc,
                 sn);
-        return productTransform.allProducts(products);
+        return ProductTransform.productList(products);
     }
 
     @Override
@@ -68,15 +67,15 @@ public class ProductServiceImpl implements ProductService {
         ProductEntity product = productRepository.findBySlug(slug).orElseThrow(() -> new ResponseStatusException(
                 HttpStatus.NOT_FOUND,
                 "producto " + slug + " no encontrado"));
-        return productTransform.product(product);
+        return ProductTransform.product(product);
     }
 
     @Override
     public String generateProduct() {
         List<ProductEntity> products = productRepository.findBySlugIsNull();
         for (ProductEntity product : products) {
-            product.setSlug(productFunctions.slugProduct(product.getName()));
-            product.setSearchName(productFunctions.searchName(product.getName()));
+            product.setSlug(ProductFunctions.slugProduct(product.getName()));
+            product.setSearchName(ProductFunctions.searchName(product.getName()));
         }
         productRepository.saveAll(products);
         return "hecho";
@@ -85,7 +84,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     @Override
     public String createProduct(ProductCreateRequest payload) {
-        String productName = productFunctions.searchName(payload.name());
+        String productName = ProductFunctions.searchName(payload.name());
 
         if (productRepository.existsBySearchName(productName)) {
             throw new ResponseStatusException(
@@ -106,7 +105,7 @@ public class ProductServiceImpl implements ProductService {
         product.setMinimumStock(Objects.requireNonNullElse(
                 payload.minimumStock(),
                 1));
-        product.setSlug(productFunctions.slugProduct(payload.name()));
+        product.setSlug(ProductFunctions.slugProduct(payload.name()));
         product.setSearchName(productName);
         product.setSku(payload.sku());
         product.setUpc(payload.upc());
@@ -129,7 +128,7 @@ public class ProductServiceImpl implements ProductService {
 
         if (payload.name() != null) {
             product.setName(payload.name());
-            product.setSlug(productFunctions.slugProduct(payload.name()));
+            product.setSlug(ProductFunctions.slugProduct(payload.name()));
         }
         if (payload.description() != null) {
             product.setDescription(payload.description());
@@ -160,6 +159,6 @@ public class ProductServiceImpl implements ProductService {
 
         ProductEntity nProduct = productRepository.save(product);
 
-        return productTransform.product(nProduct);
+        return ProductTransform.product(nProduct);
     }
 }

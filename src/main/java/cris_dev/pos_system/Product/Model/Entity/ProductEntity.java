@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Getter
@@ -39,12 +40,14 @@ public class ProductEntity {
     private String slug;
     @Column(name = "search_name", columnDefinition = "TEXT")
     private String searchName;
-    @Column(length = 12, nullable = false)
-    private String sku;
     @Column(columnDefinition = "TEXT", nullable = false)
+    private String sku;
+    @Column(length = 12, nullable = false)
     private String upc;
     @Column(length = 1, nullable = false)
     private String status = "A";
+    @Column(name = "soft_delete")
+    private OffsetDateTime softDelete;
 }
 
 

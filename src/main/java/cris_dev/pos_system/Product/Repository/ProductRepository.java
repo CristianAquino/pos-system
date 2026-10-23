@@ -16,22 +16,32 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
     @Query("""
                 SELECT p
                 FROM ProductEntity p
+                WHERE (p.status = 'A' OR p.stock > 0)
+                AND (:searchName IS NULL OR p.searchName LIKE :searchName)
+            """)
+    Page<ProductEntity> findBySearchNameContaining(
+            @Param("searchName") String searchName,
+            Pageable pageable);
+
+    @Query("""
+                SELECT p
+                FROM ProductEntity p
                 WHERE (:sku IS NULL OR p.sku = :sku )
                 AND (:upc IS NULL OR p.upc = :upc)
                 AND (:sName IS NULL OR p.searchName LIKE :sName)
+                AND p.softDelete IS NULL
             """)
-    public List<ProductEntity> searchProducts(
+    List<ProductEntity> searchProducts(
             @Param("sku") String sku,
             @Param("upc") String upc,
             @Param("sName") String sName);
 
-    public Optional<ProductEntity> findBySlug(String slug);
-
-    public List<ProductEntity> findBySlugIsNull();
-
-    public Page<ProductEntity> findBySearchNameContaining(
-            String searchName,
+    Page<ProductEntity> findBySoftDeleteIsNotNull(
             Pageable pageable);
 
-    public Boolean existsBySearchName(String searchName);
+    Optional<ProductEntity> findBySlug(String slug);
+
+    List<ProductEntity> findBySlugIsNull();
+
+    Boolean existsBySearchName(String searchName);
 }
