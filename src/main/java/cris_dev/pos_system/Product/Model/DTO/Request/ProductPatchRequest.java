@@ -20,8 +20,8 @@ public record ProductPatchRequest(
         Integer stock,
         @Positive
         Integer minimumStock,
-        @Size(max = 12)
         String sku,
+        @Size(max = 12)
         String upc,
         String status) {
 }
