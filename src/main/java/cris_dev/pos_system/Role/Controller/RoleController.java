@@ -49,7 +49,7 @@ public class RoleController {
         return ResponseEntity.status(HttpStatus.OK).body(role);
     }
 
-    @PutMapping("update/{code}")
+    @PutMapping("update/{code}/status")
     public ResponseEntity<RoleResponse> updatedStatus(
             @Valid @Pattern(regexp = "^\\d{6}$") @PathVariable String code) {
         RoleResponse role = roleService.updStatusRole(code);
