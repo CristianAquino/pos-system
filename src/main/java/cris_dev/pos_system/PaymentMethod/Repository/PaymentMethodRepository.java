@@ -1,8 +1,6 @@
 package cris_dev.pos_system.PaymentMethod.Repository;
 
 import cris_dev.pos_system.PaymentMethod.Model.Entity.PaymentMethodEntity;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -29,9 +27,15 @@ public interface PaymentMethodRepository extends JpaRepository<PaymentMethodEnti
             """)
     Integer restoreSoftDelete(@Param("id") Long id);
 
-    Page<PaymentMethodEntity> findBySoftDeleteIsNull(Pageable pageable);
-
     boolean existsByName(String name);
+
+    boolean existsByIdAndSoftDeleteIsNull(Long id);
+
+    boolean existsByIdAndSoftDeleteIsNotNull(Long id);
+
+    List<PaymentMethodEntity> findBySoftDeleteIsNull();
+
+    List<PaymentMethodEntity> findBySoftDeleteIsNotNull();
 
     List<PaymentMethodEntity> findByStatusAndSoftDeleteIsNull(String status);
 }
