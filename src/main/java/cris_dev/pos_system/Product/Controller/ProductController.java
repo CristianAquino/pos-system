@@ -22,7 +22,7 @@ public class ProductController {
 
     private final ProductService productService;
 
-    @GetMapping("/all")
+    @GetMapping("all")
     public ResponseEntity<Page<ProductResponse>> allProducts(
             @RequestParam(required = false) String name,
             @RequestParam(defaultValue = "1") int page,
@@ -36,32 +36,43 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(products);
     }
 
-    @GetMapping("/search")
+    @GetMapping("all/soft_delete")
+    public ResponseEntity<Page<ProductResponse>> allProductsSoftDelete(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(
+                page - 1,
+                size);
+        Page<ProductResponse> products = productService.allProductsSoftDelete(pageable);
+        return ResponseEntity.status(HttpStatus.OK).body(products);
+    }
+
+    @GetMapping("search")
     public ResponseEntity<List<ProductResponse>> searchProducts(@RequestParam String q) {
         List<ProductResponse> products = productService.searchProducts(q);
         return ResponseEntity.status(HttpStatus.OK).body(products);
     }
 
-    @GetMapping("/{slug}")
-    public ResponseEntity<ProductResponse> productById(@PathVariable String slug) {
+    @GetMapping("{slug}")
+    public ResponseEntity<ProductResponse> productBySlug(@PathVariable String slug) {
         ProductResponse product = productService.getProduct(slug);
         return ResponseEntity.status(HttpStatus.OK).body(product);
     }
 
     // metodo auxiliar
-    @GetMapping("/generate")
+    @GetMapping("generate")
     public ResponseEntity<String> generateSlug() {
         String msg = productService.generateProduct();
         return ResponseEntity.status(HttpStatus.OK).body(msg);
     }
 
-    @PostMapping("/create")
+    @PostMapping("create")
     public ResponseEntity<String> createProduct(@Valid @RequestBody ProductCreateRequest payload) {
         String msg = productService.createProduct(payload);
         return ResponseEntity.status(HttpStatus.CREATED).body(msg);
     }
 
-    @PatchMapping("/update")
+    @PatchMapping("update")
     public ResponseEntity<ProductResponse> patchProduct(
             @Valid @RequestBody ProductPatchRequest payload) {
         ProductResponse product = productService.updateProduct(payload);
