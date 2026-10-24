@@ -1,8 +1,6 @@
 package cris_dev.pos_system.CashRegister.Repository;
 
 import cris_dev.pos_system.CashRegister.Model.Entity.CashRegisterEntity;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -30,9 +28,15 @@ public interface CashRegisterRepository extends JpaRepository<CashRegisterEntity
             """)
     Integer restoreSoftDelete(@Param("id") UUID id);
 
-    Page<CashRegisterEntity> findBySoftDeleteIsNull(Pageable pageable);
-
     boolean existsByName(String name);
+
+    boolean existsByIdAndSoftDeleteIsNull(UUID id);
+
+    boolean existsByIdAndSoftDeleteIsNotNull(UUID id);
+
+    List<CashRegisterEntity> findBySoftDeleteIsNullOrderByStatusDesc();
+
+    List<CashRegisterEntity> findBySoftDeleteIsNotNull();
 
     List<CashRegisterEntity> findByStatusAndSoftDeleteIsNull(String status);
 }
