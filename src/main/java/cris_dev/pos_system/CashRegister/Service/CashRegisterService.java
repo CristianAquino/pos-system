@@ -4,26 +4,30 @@ import cris_dev.pos_system.CashRegister.Model.DTO.Request.CashRegisterCreateRequ
 import cris_dev.pos_system.CashRegister.Model.DTO.Request.CashRegisterPatchRequest;
 import cris_dev.pos_system.CashRegister.Model.DTO.Response.CashRegisterIdResponse;
 import cris_dev.pos_system.CashRegister.Model.DTO.Response.CashRegisterResponse;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface CashRegisterService {
-    List<CashRegisterResponse> activeCashRegisters();
 
-    Page<CashRegisterResponse> allCashRegisters(Pageable pageable);
+    List<CashRegisterResponse> allCashRegisters(String status);
+
+    List<CashRegisterResponse> allCashRegistersSoftDelete();
 
     CashRegisterIdResponse getCashRegister(UUID id);
+
+    CashRegisterResponse createCashRegister(CashRegisterCreateRequest payload);
+
+    CashRegisterResponse updateCashRegisterName(
+            UUID id,
+            CashRegisterPatchRequest payload);
+
+    CashRegisterResponse updateCashRegisterStatus(
+            UUID id);
 
     String softDeleteCashRegister(UUID id);
 
     String restoreSoftDeleteCashRegister(UUID id);
 
-    CashRegisterResponse createCashRegister(CashRegisterCreateRequest payload);
 
-    CashRegisterResponse updateCashRegister(
-            UUID id,
-            CashRegisterPatchRequest payload);
 }

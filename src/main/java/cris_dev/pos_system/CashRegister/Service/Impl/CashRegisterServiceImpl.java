@@ -10,8 +10,6 @@ import cris_dev.pos_system.CashRegister.Repository.CashRegisterRepository;
 import cris_dev.pos_system.CashRegister.Service.CashRegisterService;
 import cris_dev.pos_system.CashRegister.Utils.CashRegisterTransform;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,14 +25,17 @@ public class CashRegisterServiceImpl implements CashRegisterService {
     private final CashOpeningRepository cashOpeningRepository;
 
     @Override
-    public List<CashRegisterResponse> activeCashRegisters() {
-        List<CashRegisterEntity> cashRegisters = cashRegisterRepository.findByStatusAndSoftDeleteIsNull("A");
-        return CashRegisterTransform.cashRegisterList(cashRegisters);
+    public List<CashRegisterResponse> allCashRegisters(String status) {
+        if (status == null) {
+            return CashRegisterTransform.cashRegisterList(cashRegisterRepository.findBySoftDeleteIsNullOrderByStatusDesc());
+        }
+        String nStatus = status.trim().toUpperCase();
+        return CashRegisterTransform.cashRegisterList(cashRegisterRepository.findByStatusAndSoftDeleteIsNull(nStatus));
     }
 
     @Override
-    public Page<CashRegisterResponse> allCashRegisters(Pageable pageable) {
-        return cashRegisterRepository.findBySoftDeleteIsNull(pageable).map(CashRegisterTransform::cashRegister);
+    public List<CashRegisterResponse> allCashRegistersSoftDelete() {
+        return CashRegisterTransform.cashRegisterList(cashRegisterRepository.findBySoftDeleteIsNotNull());
     }
 
     @Override
@@ -44,46 +45,6 @@ public class CashRegisterServiceImpl implements CashRegisterService {
                 "Caja registradora no encontrada"));
 
         return CashRegisterTransform.cashRegisterId(cashRegister);
-    }
-
-    @Transactional
-    @Override
-    public String softDeleteCashRegister(UUID id) {
-        if (!cashRegisterRepository.existsById(id)) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
-                    "No se pudo encontrar la caja registradora");
-        }
-
-        int affected = cashRegisterRepository.softDelete(id);
-
-        if (affected == 0) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "No se pudo realizar la eliminacion de la caja registradora");
-        }
-
-        return "Se realizo la eliminacion de la caja registradora";
-    }
-
-    @Transactional
-    @Override
-    public String restoreSoftDeleteCashRegister(UUID id) {
-        if (!cashRegisterRepository.existsById(id)) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
-                    "No se pudo encontrar la caja registradora");
-        }
-
-        int affected = cashRegisterRepository.restoreSoftDelete(id);
-
-        if (affected == 0) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "No se pudo realizar la restauracion de la caja registradora");
-        }
-
-        return "Se realizo la restauracion de la caja registradora";
     }
 
     @Transactional
@@ -108,7 +69,7 @@ public class CashRegisterServiceImpl implements CashRegisterService {
 
     @Transactional
     @Override
-    public CashRegisterResponse updateCashRegister(
+    public CashRegisterResponse updateCashRegisterName(
             UUID id,
             CashRegisterPatchRequest payload) {
         CashRegisterEntity cashRegister = cashRegisterRepository.findById(id).orElseThrow(() -> new ResponseStatusException(
@@ -134,25 +95,73 @@ public class CashRegisterServiceImpl implements CashRegisterService {
             cashRegister.setName(_name);
         }
 
-        if (payload.status() != null) {
-            String _status = payload.status().trim().toUpperCase();
-            if (_status.equals(cashRegister.getStatus())) {
-                throw new ResponseStatusException(
-                        HttpStatus.CONFLICT,
-                        "caja registradora " + cashRegister.getName() + " su estado es el mismo.");
-            }
-            boolean used = cashOpeningRepository.existsByCashRegisterIdAndStatus(
-                    id,
-                    "A");
+        return CashRegisterTransform.cashRegister(cashRegister);
+    }
 
-            if (used) {
-                throw new ResponseStatusException(
-                        HttpStatus.CONFLICT,
-                        "Caja registradora esta aperturada, cierrela " + "antes de realizar este cambio.");
-            }
-            cashRegister.setStatus(_status);
+    @Transactional
+    @Override
+    public CashRegisterResponse updateCashRegisterStatus(
+            UUID id) {
+        CashRegisterEntity cashRegister = cashRegisterRepository.findById(id).orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND,
+                "No se pudo encontrar la caja registradora"));
+
+        boolean used = cashOpeningRepository.existsByCashRegisterIdAndStatus(
+                id,
+                "A");
+
+        if (used) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Caja registradora esta aperturada, cierrela " + "antes de realizar este cambio.");
+        }
+
+        if (cashRegister.getStatus().equals("A")) {
+            cashRegister.setStatus("I");
+        } else {
+            cashRegister.setStatus("A");
         }
 
         return CashRegisterTransform.cashRegister(cashRegister);
+    }
+
+    @Transactional
+    @Override
+    public String softDeleteCashRegister(UUID id) {
+        if (!cashRegisterRepository.existsByIdAndSoftDeleteIsNull(id)) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "No se pudo encontrar la caja registradora o la caja " + "registradora ya se encuentra eliminada");
+        }
+
+        int affected = cashRegisterRepository.softDelete(id);
+
+        if (affected == 0) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "No se pudo realizar la eliminacion de la caja registradora");
+        }
+
+        return "Se realizo la eliminacion de la caja registradora";
+    }
+
+    @Transactional
+    @Override
+    public String restoreSoftDeleteCashRegister(UUID id) {
+        if (!cashRegisterRepository.existsByIdAndSoftDeleteIsNotNull(id)) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "No se pudo encontrar la caja registradora o la caja " + "registradora ya esta restaurada");
+        }
+
+        int affected = cashRegisterRepository.restoreSoftDelete(id);
+
+        if (affected == 0) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "No se pudo realizar la restauracion de la caja registradora");
+        }
+
+        return "Se realizo la restauracion de la caja registradora";
     }
 }
