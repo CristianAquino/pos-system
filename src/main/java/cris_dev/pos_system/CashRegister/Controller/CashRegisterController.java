@@ -6,10 +6,8 @@ import cris_dev.pos_system.CashRegister.Model.DTO.Response.CashRegisterIdRespons
 import cris_dev.pos_system.CashRegister.Model.DTO.Response.CashRegisterResponse;
 import cris_dev.pos_system.CashRegister.Service.CashRegisterService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,21 +21,17 @@ import java.util.UUID;
 public class CashRegisterController {
     private final CashRegisterService cashRegisterService;
 
-    @GetMapping("active")
-    public ResponseEntity<List<CashRegisterResponse>> allActiveCashRegisters() {
-        List<CashRegisterResponse> cashRegister = cashRegisterService.activeCashRegisters();
-        return ResponseEntity.status(HttpStatus.OK).body(cashRegister);
+    @GetMapping("all")
+    public ResponseEntity<List<CashRegisterResponse>> allCashRegisters(
+            @RequestParam(required = false) @Pattern(regexp = "^[aiAI]$") String status) {
+        List<CashRegisterResponse> cashRegisters = cashRegisterService.allCashRegisters(status);
+        return ResponseEntity.status(HttpStatus.OK).body(cashRegisters);
     }
 
-    @GetMapping("all")
-    public ResponseEntity<Page<CashRegisterResponse>> allCashRegisters(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(
-                page - 1,
-                size);
-        Page<CashRegisterResponse> cashRegister = cashRegisterService.allCashRegisters(pageable);
-        return ResponseEntity.status(HttpStatus.OK).body(cashRegister);
+    @GetMapping("all/soft_delete")
+    public ResponseEntity<List<CashRegisterResponse>> allPaymentsSoftDelete() {
+        List<CashRegisterResponse> cashRegisters = cashRegisterService.allCashRegistersSoftDelete();
+        return ResponseEntity.status(HttpStatus.OK).body(cashRegisters);
     }
 
     @GetMapping("{id}")
@@ -52,8 +46,8 @@ public class CashRegisterController {
         return ResponseEntity.status(HttpStatus.CREATED).body(cashRegister);
     }
 
-    @PatchMapping("update/{id}")
-    public ResponseEntity<CashRegisterResponse> patchCashRegister(
+    @PatchMapping("update/{id}/name")
+    public ResponseEntity<CashRegisterResponse> patchCashRegisterName(
             @PathVariable UUID id,
             @Valid @RequestBody CashRegisterPatchRequest payload) {
         CashRegisterResponse cashRegister = cashRegisterService.updateCashRegister(
@@ -62,6 +56,13 @@ public class CashRegisterController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(cashRegister);
     }
 
+    @PatchMapping("update/{id}/status")
+    public ResponseEntity<CashRegisterResponse> patchCashRegisterStatus(
+            @PathVariable UUID id) {
+        CashRegisterResponse cashRegister = cashRegisterService.updateCashRegister(id);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(cashRegister);
+    }
+    
     @PutMapping("soft_delete/{id}")
     public ResponseEntity<String> softDelete(@PathVariable UUID id) {
         String msg = cashRegisterService.softDeleteCashRegister(id);
